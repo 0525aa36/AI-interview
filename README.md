@@ -1,6 +1,5 @@
 # 딥러닝을 활용한 모의면접 프로그램  
 **Simulated Interview Program Utilizing Deep Learning**  
-개발자: 김도균, 석재민
 
 ---
 
