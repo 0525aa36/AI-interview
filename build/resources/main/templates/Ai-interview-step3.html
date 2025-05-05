@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ko" data-bs-theme="auto">
+<head>
+    <script src="/docs/5.3/assets/js/color-modes.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, 그리고 Bootstrap 기여자들">
+    <meta name="generator" content="Hugo 0.122.0">
+    <title>면접의 神</title>
+    <link rel="canonical" href="https://getbootstrap.kr/docs/5.3/examples/blog/">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" href="/docs/5.3/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
+    <link rel="icon" href="/docs/5.3/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/docs/5.3/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+    <link rel="manifest" href="/docs/5.3/assets/img/favicons/manifest.json">
+    <link rel="mask-icon" href="/docs/5.3/assets/img/favicons/safari-pinned-tab.svg" color="#712cf9">
+    <link rel="icon" href="/docs/5.3/assets/img/favicons/favicon.ico">
+    <meta name="theme-color" content="#712cf9">
+    <style>
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+        .nav-scroller .nav {
+            display: flex;
+            flex-wrap: nowrap;
+            padding-bottom: 1rem;
+            margin-top: -1px;
+            overflow-x: auto;
+            text-align: center;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .bd-mode-toggle .dropdown-menu .active .bi {
+            display: block !important;
+        }
+
+        .content {
+            margin-top: 20px;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .step-indicator div {
+            width: 30px;
+            height: 30px;
+            background-color: #ddd;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .step-indicator .active {
+            background-color: #00f;
+            color: white;
+        }
+
+        .question-box {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .timer {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .button-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .button-group button {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <header class="border-bottom lh-1 py-3 mb-4">
+        <div class="row flex-nowrap justify-content-between align-items-center">
+            <div class="col-4 pt-1"></div>
+            <div class="col-4 text-center">
+                <a class="blog-header-logo text-body-emphasis text-decoration-none" href="/index">
+                    <img src="/images/로고.png" alt="로고" style="max-width: 50%; height: auto;">
+                </a>
+            </div>
+            <div class="col-4 d-flex justify-content-end align-items-center">
+                <div class="dropdown me-2">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        마이페이지
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="dropdownMenuButton">
+                        <li><a class="dropdown-item" th:href="@{/profile}">내 정보</a></li>
+                        <li><a class="dropdown-item" th:href="@{/mock-interview}">모의면접 결과</a></li>
+                        <li><a class="dropdown-item" th:href="@{/change-password}">비밀번호 변경</a></li>
+                        <li><a class="dropdown-item text-danger" th:href="@{/delete-account}">회원 탈퇴</a></li>
+                    </ul>
+                </div>
+                <a class="btn btn-sm btn-outline-secondary" th:href="@{/logout}">로그아웃</a>
+            </div>
+        </div>
+    </header>
+</div>
+<br>
+<div class="container content">
+    <div class="step-indicator">
+        <div>1</div>
+        <div>2</div>
+        <div class="active">3</div>
+        <div>4</div>
+    </div>
+    <div id="timer" class="timer">60</div>
+    <div id="question-box" class="question-box">면접 질문</div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card" style="height: 500px;">
+                    <div class="card-body">
+                        <video id="video" width="100%" height="auto" autoplay muted></video>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="button-group">
+        <button id="start-button" class="btn btn-success">면접 시작</button>
+        <button id="next-button" class="btn btn-primary" disabled>다음 질문</button>
+        <button id="end-button" class="btn btn-danger" style="display: none;">면접 종료</button>
+    </div>
+</div>
+<footer>
+    <div class="container">
+        <footer class="d-flex flex-wrap justify-content-between.align-items-center py-3 my-4 border-top">
+            <div class="container d-flex flex-column align-items-center">
+                <img src="/images/로고.png" alt="면접의 신 로고" class="img-fluid mb-3" style="max-width: 100px; height: auto;">
+                <div class="text-center text-body-secondary mt-3 d-flex flex-wrap justify-content-center">
+                    <div class="p-2">
+                        <p class="mb-0">프로젝트: 면접의 신</p>
+                    </div>
+                    <div class="p-2">
+                        <p class="mb-0">개발자: 김도균, 석재민</p>
+                    </div>
+                    <div class="p-2">
+                        <p class="mb-0">팀장: 김도균</p>
+                    </div>
+                    <div class="p-2">
+                        <p class="mb-0">연락처: 010-5627-3836</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</footer>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const questionBox = document.getElementById("question-box");
+        const timer = document.getElementById("timer");
+        const startButton = document.getElementById("start-button");
+        const nextButton = document.getElementById("next-button");
+        const endButton = document.getElementById("end-button");
+        const videoElement = document.getElementById("video");
+
+        let occupationName = new URLSearchParams(window.location.search).get("occupationName");
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let timeLeft = 60;
+        let countdown;
+        let mediaRecorder;
+        let recordedChunks = [];
+        let recordingInProgress = false; // 녹화 상태를 추적하기 위한 변수
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        if (occupationName) {
+            fetch(`/interview-questions?occupationName=${occupationName}`)
+                .then(response => response.json())
+                .then(data => {
+                    questions = data;
+                    shuffleArray(questions); // 질문을 섞음
+                    if (questions.length > 0) {
+                        questionBox.textContent = `1번 질문. ${questions[0].question}`;
+                    } else {
+                        questionBox.textContent = "해당 직업에 대한 질문이 없습니다.";
+                    }
+                });
+        }
+
+        function startTimer() {
+            timeLeft = 60;
+            countdown = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    nextButton.disabled = false;
+                    stopRecording().then(() => {
+                        nextQuestion();
+                    });
+                }
+                timer.textContent = timeLeft--;
+            }, 1000);
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < 4) { // 총 5문제 제한
+                currentQuestionIndex++;
+                questionBox.textContent = `${currentQuestionIndex + 1}번 질문. ${questions[currentQuestionIndex].question}`;
+                timeLeft = 60;
+                timer.textContent = timeLeft; // 타이머를 60초로 초기화
+                startButton.disabled = false;
+                nextButton.disabled = true;
+            } else {
+                questionBox.textContent = "고생하셨습니다. 면접이 종료되었습니다. 면접 종료 버튼을 클릭하여 면접 결과를 확인하세요.";
+                nextButton.style.display = "none";
+                endButton.style.display = "inline-block";
+                endButton.disabled = false;
+            }
+        }
+
+        startButton.addEventListener("click", function () {
+            startButton.disabled = true;
+            nextButton.disabled = false;
+            startTimer();
+            startRecording();
+        });
+
+        nextButton.addEventListener("click", function () {
+            clearInterval(countdown);
+            stopRecording().then(() => {
+                nextQuestion();
+            });
+        });
+
+        endButton.addEventListener("click", function () {
+            if (recordingInProgress) { // 녹화가 진행 중이면 중단하고 저장
+                stopRecording().then(() => {
+                    endInterview();
+                });
+            } else {
+                endInterview();
+            }
+        });
+
+        async function startRecording() {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            videoElement.srcObject = stream;
+
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.ondataavailable = function (event) {
+                if (event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            };
+            mediaRecorder.onstop = function () {
+                saveRecording();
+            };
+            mediaRecorder.start();
+            recordingInProgress = true; // 녹화가 시작됨
+        }
+
+        function stopRecording() {
+            return new Promise((resolve) => {
+                mediaRecorder.onstop = function () {
+                    saveRecording().then(() => {
+                        recordingInProgress = false; // 녹화가 중지됨
+                        resolve();
+                    });
+                };
+                mediaRecorder.stop();
+            });
+        }
+
+        async function saveRecording() {
+            const blob = new Blob(recordedChunks, {
+                type: 'video/webm'
+            });
+            recordedChunks = []; // 새로운 질문을 위해 recordedChunks 초기화
+            const formData = new FormData();
+            formData.append('videoFile', blob, `recording_${currentQuestionIndex}.webm`);
+
+            try {
+                const response = await fetch('http://localhost:5000/upload-files', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to upload files');
+                }
+            } catch (error) {
+                console.error('Error uploading files:', error);
+            }
+        }
+
+        async function endInterview() {
+            window.location.href = '/Ai-interview-step4';
+        }
+    });
+</script>
+
+</body>
+</html>
