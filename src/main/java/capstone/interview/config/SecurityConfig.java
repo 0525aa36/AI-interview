@@ -23,7 +23,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/", "/index", "/register", "/login", "/css/**", "/images/**", "/api/send-verification-code", "/check-username").permitAll()
+                        .requestMatchers("/", "/index", "/register", "/login", "/css/**", "/images/**", "/api/send-verification-code", "/check-username" ).permitAll()
                         .requestMatchers("/Ai-interview-step1").authenticated() // "/Ai-interview" 경로는 인증된 사용자만 접근 가능
                         .anyRequest().authenticated()
                 )

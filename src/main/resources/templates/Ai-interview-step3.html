@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ko" data-bs-theme="auto">
-
 <head>
     <script src="/docs/5.3/assets/js/color-modes.js"></script>
     <meta charset="utf-8">
@@ -22,47 +21,11 @@
     <link rel="icon" href="/docs/5.3/assets/img/favicons/favicon.ico">
     <meta name="theme-color" content="#712cf9">
     <style>
-        .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
-        }
-
         @media (min-width: 768px) {
             .bd-placeholder-img-lg {
                 font-size: 3.5rem;
             }
         }
-
-        .b-example-divider {
-            width: 100%;
-            height: 3rem;
-            background-color: rgba(0, 0, 0, .1);
-            border: solid rgba(0, 0, 0, .15);
-            border-width: 1px 0;
-            box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
-        }
-
-        .b-example-vr {
-            flex-shrink: 0;
-            width: 1.5rem;
-            height: 100vh;
-        }
-
-        .bi {
-            vertical-align: -.125em;
-            fill: currentColor;
-        }
-
-        .nav-scroller {
-            position: relative;
-            z-index: 2;
-            height: 2.75rem;
-            overflow-y: hidden;
-        }
-
         .nav-scroller .nav {
             display: flex;
             flex-wrap: nowrap;
@@ -72,27 +35,6 @@
             text-align: center;
             white-space: nowrap;
             -webkit-overflow-scrolling: touch;
-        }
-
-        .btn-bd-primary {
-            --bd-violet-bg: #712cf9;
-            --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
-
-            --bs-btn-font-weight: 600;
-            --bs-btn-color: var(--bs-white);
-            --bs-btn-bg: var(--bd-violet-bg);
-            --bs-btn-border-color: var(--bd-violet-bg);
-            --bs-btn-hover-color: var(--bs-white);
-            --bs-btn-hover-bg: #6528e0;
-            --bs-btn-hover-border-color: #6528e0;
-            --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
-            --bs-btn-active-color: var(--bs-btn-hover-color);
-            --bs-btn-active-bg: #5a23c8;
-            --bs-btn-active-border-color: #5a23c8;
-        }
-
-        .bd-mode-toggle {
-            z-index: 1500;
         }
 
         .bd-mode-toggle .dropdown-menu .active .bi {
@@ -150,11 +92,15 @@
             padding: 10px 20px;
             cursor: pointer;
         }
+
+        video {
+            width: 100%;
+            height: auto;
+        }
     </style>
     <!-- Custom styles for this template -->
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
 </head>
-
 <body>
 <div class="container">
     <header class="border-bottom lh-1 py-3 mb-4">
@@ -167,8 +113,7 @@
             </div>
             <div class="col-4 d-flex justify-content-end align-items-center">
                 <div class="dropdown me-2">
-                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
-                            id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                         마이페이지
                     </button>
                     <ul class="dropdown-menu dropdown-menu-custom" aria-labelledby="dropdownMenuButton">
@@ -192,16 +137,13 @@
         <div>4</div>
     </div>
     <div id="timer" class="timer">60</div>
-    <div id="question-box" class="question-box">
-        면접 질문
-    </div>
+    <div id="question-box" class="question-box">면접 질문</div>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card" style="height: 500px;">
-                    <div class="card-header">OpenCV 화면</div>
                     <div class="card-body">
-                        <!-- OpenCV 기능을 여기에 추가하세요 -->
+                        <video id="video" width="100%" height="auto" autoplay muted></video>
                     </div>
                 </div>
             </div>
@@ -210,14 +152,14 @@
     <div class="button-group">
         <button id="start-button" class="btn btn-success">면접 시작</button>
         <button id="next-button" class="btn btn-primary" disabled>다음 질문</button>
+        <button id="end-button" class="btn btn-danger" style="display: none;">면접 종료</button>
     </div>
 </div>
 <footer>
     <div class="container">
-        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+        <footer class="d-flex flex-wrap justify-content-between.align-items-center py-3 my-4 border-top">
             <div class="container d-flex flex-column align-items-center">
-                <img src="/images/로고.png" alt="면접의 신 로고" class="img-fluid mb-3"
-                     style="max-width: 100px; height: auto;">
+                <img src="/images/로고.png" alt="면접의 신 로고" class="img-fluid mb-3" style="max-width: 100px; height: auto;">
                 <div class="text-center text-body-secondary mt-3 d-flex flex-wrap justify-content-center">
                     <div class="p-2">
                         <p class="mb-0">프로젝트: 면접의 신</p>
@@ -242,18 +184,31 @@
         const timer = document.getElementById("timer");
         const startButton = document.getElementById("start-button");
         const nextButton = document.getElementById("next-button");
+        const endButton = document.getElementById("end-button");
+        const videoElement = document.getElementById("video");
 
         let occupationName = new URLSearchParams(window.location.search).get("occupationName");
         let questions = [];
         let currentQuestionIndex = 0;
         let timeLeft = 60;
         let countdown;
+        let mediaRecorder;
+        let recordedChunks = [];
+        let recordingInProgress = false; // 녹화 상태를 추적하기 위한 변수
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
 
         if (occupationName) {
             fetch(`/interview-questions?occupationName=${occupationName}`)
                 .then(response => response.json())
                 .then(data => {
-                    questions = data.slice(0, 5); // 최대 5개의 질문만 선택
+                    questions = data;
+                    shuffleArray(questions); // 질문을 섞음
                     if (questions.length > 0) {
                         questionBox.textContent = `1번 질문. ${questions[0].question}`;
                     } else {
@@ -263,27 +218,32 @@
         }
 
         function startTimer() {
+            timeLeft = 60;
             countdown = setInterval(() => {
                 if (timeLeft <= 0) {
                     clearInterval(countdown);
-                    nextQuestion();
+                    nextButton.disabled = false;
+                    stopRecording().then(() => {
+                        nextQuestion();
+                    });
                 }
                 timer.textContent = timeLeft--;
             }, 1000);
         }
 
         function nextQuestion() {
-            if (currentQuestionIndex < questions.length - 1) {
+            if (currentQuestionIndex < 4) { // 총 5문제 제한
                 currentQuestionIndex++;
                 questionBox.textContent = `${currentQuestionIndex + 1}번 질문. ${questions[currentQuestionIndex].question}`;
                 timeLeft = 60;
-                startTimer();
+                timer.textContent = timeLeft; // 타이머를 60초로 초기화
+                startButton.disabled = false;
+                nextButton.disabled = true;
             } else {
-                questionBox.textContent = "면접이 종료되었습니다.";
-                nextButton.textContent = "면접 종료";
-                nextButton.onclick = function () {
-                    window.location.href = "/Ai-interview-step4";
-                };
+                questionBox.textContent = "고생하셨습니다. 면접이 종료되었습니다. 면접 종료 버튼을 클릭하여 면접 결과를 확인하세요.";
+                nextButton.style.display = "none";
+                endButton.style.display = "inline-block";
+                endButton.disabled = false;
             }
         }
 
@@ -291,14 +251,82 @@
             startButton.disabled = true;
             nextButton.disabled = false;
             startTimer();
+            startRecording();
         });
 
         nextButton.addEventListener("click", function () {
             clearInterval(countdown);
-            nextQuestion();
+            stopRecording().then(() => {
+                nextQuestion();
+            });
         });
+
+        endButton.addEventListener("click", function () {
+            if (recordingInProgress) { // 녹화가 진행 중이면 중단하고 저장
+                stopRecording().then(() => {
+                    endInterview();
+                });
+            } else {
+                endInterview();
+            }
+        });
+
+        async function startRecording() {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            videoElement.srcObject = stream;
+
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.ondataavailable = function (event) {
+                if (event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            };
+            mediaRecorder.onstop = function () {
+                saveRecording();
+            };
+            mediaRecorder.start();
+            recordingInProgress = true; // 녹화가 시작됨
+        }
+
+        function stopRecording() {
+            return new Promise((resolve) => {
+                mediaRecorder.onstop = function () {
+                    saveRecording().then(() => {
+                        recordingInProgress = false; // 녹화가 중지됨
+                        resolve();
+                    });
+                };
+                mediaRecorder.stop();
+            });
+        }
+
+        async function saveRecording() {
+            const blob = new Blob(recordedChunks, {
+                type: 'video/webm'
+            });
+            recordedChunks = []; // 새로운 질문을 위해 recordedChunks 초기화
+            const formData = new FormData();
+            formData.append('videoFile', blob, `recording_${currentQuestionIndex}.webm`);
+
+            try {
+                const response = await fetch('http://localhost:5000/upload-files', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to upload files');
+                }
+            } catch (error) {
+                console.error('Error uploading files:', error);
+            }
+        }
+
+        async function endInterview() {
+            window.location.href = '/Ai-interview-step4';
+        }
     });
 </script>
-</body>
 
+</body>
 </html>

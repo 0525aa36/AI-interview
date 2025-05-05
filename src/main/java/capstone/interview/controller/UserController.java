@@ -109,5 +109,15 @@ public class UserController {
         }
     }
 
+    @GetMapping("/mockinterview")
+    public String getMockInterview(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAuthenticated = authentication != null && authentication.isAuthenticated();
+        model.addAttribute("isAuthenticated", isAuthenticated);
+        return "mockinterview";
+    }
+
+
+
 
 }

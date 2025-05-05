@@ -4,17 +4,18 @@ import capstone.interview.model.Industry;
 import capstone.interview.model.InterviewQuestion;
 import capstone.interview.model.Job;
 import capstone.interview.model.Occupation;
-import capstone.interview.service.IndustryService;
-import capstone.interview.service.InterviewQuestionService;
-import capstone.interview.service.JobService;
-import capstone.interview.service.OccupationService;
+import capstone.interview.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -30,6 +31,7 @@ public class AiInterviewController {
 
     @Autowired
     private InterviewQuestionService interviewQuestionService;
+
 
     @GetMapping("/Ai-interview-step1")
     public String aiInterviewStep1(@AuthenticationPrincipal UserDetails userDetails) {
@@ -90,4 +92,5 @@ public class AiInterviewController {
         }
         return "Ai-interview-step4";
     }
+
 }
